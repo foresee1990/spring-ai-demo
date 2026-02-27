@@ -1,0 +1,34 @@
+### Maven ###
+target/
+build/
+
+### Maven Wrapper ###
+!.mvn/wrapper/maven-wrapper.jar
+
+### Logs ###
+*.log
+logs/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### IDE ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+.vscode/
+
+### Local Config ###
+application-local.yml
+application-dev.yml

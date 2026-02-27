@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: heima-ai
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        model: qwen3:4b
+
+logging:
+  level:
+    org.springframework.ai.chat.client.advisor: DEBUG
+    com.itheima.ai: DEBUG
