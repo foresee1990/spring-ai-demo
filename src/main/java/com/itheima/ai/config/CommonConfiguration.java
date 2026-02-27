@@ -1,5 +1,6 @@
 package com.itheima.ai.config;
 
+import com.itheima.ai.constants.SystemConstants;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
@@ -8,6 +9,7 @@ import org.springframework.ai.chat.memory.ChatMemoryRepository;
 import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -47,6 +49,22 @@ public class CommonConfiguration {
                         MessageChatMemoryAdvisor.builder(chatMemory) // 记录拼接到chatMemory的Advisor
                                 .build()
                         // builder() 是"开始构建"，build() 是"完成构建"
+                )
+                .build();  // 构建最终实例， 返回 fianl ChatClient
+    }
+
+    /**
+     * 创建一个星露谷会话游戏专用的ChatClient
+     */
+    @Bean
+    public ChatClient gameChatClient(OpenAiChatModel model, ChatMemory chatMemory) {
+        return ChatClient
+                .builder(model) // 创建构建器
+                .defaultSystem(SystemConstants.GAME_SYSTEM_PROMPT) //系统提示词
+                .defaultAdvisors(
+                        new SimpleLoggerAdvisor(),// 请求前和响应后的日志记录
+                        MessageChatMemoryAdvisor.builder(chatMemory) // 记录拼接到chatMemory的Advisor
+                                .build()
                 )
                 .build();  // 构建最终实例， 返回 fianl ChatClient
     }
