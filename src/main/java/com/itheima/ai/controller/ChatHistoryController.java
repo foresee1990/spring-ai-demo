@@ -30,8 +30,12 @@ public class ChatHistoryController {
 
     //要去拿会话历史记录，看chatMemory有List<Message> get(String var1);
     @GetMapping("/{type}/{chatId}")
-    public List<MessageVO> getChatHistory(@PathVariable("type") String type, @PathVariable("chatId") String chatId) {
-        List<Message> messages = chatMemory.get(chatId);
+    public List<MessageVO> getChatHistory(@PathVariable("type") String type,
+                                          @PathVariable("chatId") String chatId) {
+        List<Message> messages = chatMemory.get(chatId, Integer.MAX_VALUE);
+        if(messages == null) {
+            return List.of();
+        }
         return messages.stream().map(MessageVO::new).toList();
     }
 

@@ -1,13 +1,12 @@
 package com.itheima.ai.controller;
 
-import com.itheima.ai.repository.InMemoryChatHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
-import static org.springframework.ai.chat.memory.ChatMemory.CONVERSATION_ID;
+import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY;
 
 /**
  * @author WU,Rowan
@@ -25,9 +24,7 @@ public class GameController {
         //所以直接通过chatClient调用模型
         return gameChatClient.prompt()     // 1. 创建提示构建器，commonConfiguration
                 .user(prompt)          // 2. 设置用户输入
-                .advisors(a -> a.param(CONVERSATION_ID, chatId))
-                // 消费了 advisorSpec 对象并对其进行配置
-                //.call()                // 3. 调用 AI 模型
+                .advisors(a -> a.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId))
                 .stream()
                 .content();            // 4. 获取响应文本
 
