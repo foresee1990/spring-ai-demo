@@ -1,6 +1,8 @@
 package com.itheima.ai.config;
 
 import com.itheima.ai.constants.SystemConstants;
+import com.itheima.ai.entity.query.CourseQuery;
+import com.itheima.ai.tools.CourseTools;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
@@ -32,6 +34,19 @@ public class CommonConfiguration {
                         new SimpleLoggerAdvisor(), // 请求前和响应后的日志记录
                         new MessageChatMemoryAdvisor(chatMemory)
                 )
+                .build();  // 构建最终实例， 返回 fianl ChatClient
+    }
+
+    @Bean
+    public ChatClient serviceChatClient(OpenAiChatModel model, ChatMemory chatMemory, CourseTools courseTools) {
+        return ChatClient
+                .builder(model) // 创建构建器
+                .defaultSystem(SystemConstants.SERVICE_SYSTEM_PROMPT) //系统提示词
+                .defaultAdvisors(
+                        new SimpleLoggerAdvisor(), // 请求前和响应后的日志记录
+                        new MessageChatMemoryAdvisor(chatMemory)
+                )
+                .defaultTools(courseTools)
                 .build();  // 构建最终实例， 返回 fianl ChatClient
     }
 
