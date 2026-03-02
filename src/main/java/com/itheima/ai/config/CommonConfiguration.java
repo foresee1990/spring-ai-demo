@@ -5,12 +5,14 @@ import com.itheima.ai.entity.query.CourseQuery;
 import com.itheima.ai.tools.CourseTools;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.context.annotation.Bean;
@@ -35,6 +37,24 @@ public class CommonConfiguration {
         return new InMemoryChatMemory();
     }
 
+    @Bean
+    public ChatClient pdfChatClient(OpenAiChatModel model, ChatMemory chatMemory, VectorStore vectorStore) {
+        return ChatClient
+                .builder(model)
+                .defaultSystem("请根据上下文回答问题，遇到上下文没有的问题，不要随意编造。")
+                .defaultAdvisors(
+                        new SimpleLoggerAdvisor(),
+                        new MessageChatMemoryAdvisor(chatMemory),
+                        new QuestionAnswerAdvisor(//处理大模型和切片内容的检索->组织prompt等
+                                vectorStore,
+                                SearchRequest.builder()
+                                        .similarityThreshold(0.6)
+                                        .topK(2)
+                                        .build()
+                        )
+                )
+                .build();
+    }
     @Bean
     public ChatClient chatClient(OllamaChatModel model, ChatMemory chatMemory) {
         return ChatClient

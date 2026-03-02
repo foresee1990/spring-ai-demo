@@ -25,3 +25,8 @@ logging:
   level:
     org.springframework.ai.chat.client.advisor: DEBUG
     com.itheima.ai: DEBUG
+
+server:
+  tomcat:
+    async-request-timeout: 60000  # 异步请求超时时间（毫秒）
+    connection-timeout: 60000     # 连接超时时间
