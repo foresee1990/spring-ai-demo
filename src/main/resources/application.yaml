@@ -12,6 +12,10 @@ spring:
       chat:
         options:
           model: qwen-max-latest
+      embedding:
+        options:
+          model: text-embedding-v3
+          dimension: 1024
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/itheima?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false
